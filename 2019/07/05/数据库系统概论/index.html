@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>[DB] 数据库系统概论 - Fusidic&#039;s blog</title><meta description="数据库系统概论 数据：数据库中存储的基本单位 数据库：是长期存储在计算机内、有组织的、可共享的大量数据的集合。具有较小的冗余度、较高的数据独立性、易扩展性。基本特点：永久存储、有组织、可共享。 数据库管理系统：是位于用户与操作系统之间的一层数据管理软件。主要功能： 数据定义功能 数据组织、存储和管理 数据操纵功能 数据库的事务管理和运行管理 数据库的建立和维护 其他功能   数据库系统DBS：指在"><meta property="og:type" content="blog"><meta property="og:title" content="[DB] 数据库系统概论"><meta property="og:url" content="https://fusidic.github.io/"><meta property="og:site_name" content="Fusidic&#039;s blog"><meta property="og:description" content="数据库系统概论 数据：数据库中存储的基本单位 数据库：是长期存储在计算机内、有组织的、可共享的大量数据的集合。具有较小的冗余度、较高的数据独立性、易扩展性。基本特点：永久存储、有组织、可共享。 数据库管理系统：是位于用户与操作系统之间的一层数据管理软件。主要功能： 数据定义功能 数据组织、存储和管理 数据操纵功能 数据库的事务管理和运行管理 数据库的建立和维护 其他功能   数据库系统DBS：指在"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2019-07-05T02:41:58.000Z"><meta property="article:modified_time" content="2020-04-06T15:21:50.282Z"><meta property="article:author" content="arithbar"><meta property="article:tag" content="NOTE"><meta property="article:tag" content="database"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://fusidic.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://fusidic.github.io/2019/07/05/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"},"headline":"Fusidic's blog","image":["https://fusidic.github.io/img/og_image.png"],"datePublished":"2019-07-05T02:41:58.000Z","dateModified":"2020-04-06T15:21:50.282Z","author":{"@type":"Person","name":"arithbar"},"description":"数据库系统概论 数据：数据库中存储的基本单位 数据库：是长期存储在计算机内、有组织的、可共享的大量数据的集合。具有较小的冗余度、较高的数据独立性、易扩展性。基本特点：永久存储、有组织、可共享。 数据库管理系统：是位于用户与操作系统之间的一层数据管理软件。主要功能： 数据定义功能 数据组织、存储和管理 数据操纵功能 数据库的事务管理和运行管理 数据库的建立和维护 其他功能   数据库系统DBS：指在"}</script><link rel="canonical" href="https://fusidic.github.io/2019/07/05/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"><link rel="icon" href="/img/favicon.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/fusidic"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-07-05T02:41:58.000Z" title="2019-07-05T02:41:58.000Z">2019-07-05</time><span class="level-item"><a class="link-muted" href="/categories/Developments/">Developments</a></span><span class="level-item">20 分钟 读完 (大约 2992 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">[DB] 数据库系统概论</h1><div class="content"><h1 id="数据库系统概论"><a href="#数据库系统概论" class="headerlink" title="数据库系统概论"></a>数据库系统概论</h1><ul>
+<li>数据：数据库中存储的基本单位</li>
+<li>数据库：是长期存储在计算机内、有组织的、可共享的大量数据的集合。具有较小的冗余度、较高的数据独立性、易扩展性。基本特点：永久存储、有组织、可共享。</li>
+<li>数据库管理系统：是位于用户与操作系统之间的一层数据管理软件。主要功能：<ul>
+<li>数据定义功能</li>
+<li>数据组织、存储和管理</li>
+<li>数据操纵功能</li>
+<li>数据库的事务管理和运行管理</li>
+<li>数据库的建立和维护</li>
+<li>其他功能</li>
+</ul>
+</li>
+<li>数据库系统DBS：指在计算机系统中引入数据库后的系统，有数据库、DBMS、应用系统、数据库管理员(DBA)组成。</li>
+</ul>
+<p><strong>数据库系统的特点</strong>：</p>
+<ul>
+<li>数据结构化</li>
+<li>数据的共享性高，冗余度低，易扩充</li>
+<li>数据独立性高</li>
+<li>数据由DBMS统一管理和控制</li>
+</ul>
+<p>数据管理的三个阶段：人工管理阶段——文件系统阶段——数据库系统阶段</p>
+<h2 id="录音思路"><a href="#录音思路" class="headerlink" title="录音思路"></a>录音思路</h2><p>1.如何组织数据——数据模型、规范化理论</p>
+<p>2.如何存取数据——数据定义与操作语言</p>
+<p>3.哪些人可以操作哪些数据——安全性相关</p>
+<p>4.很多人在操作统一数据时如何避免发生冲突——并发控制</p>
+<p>5.故障后怎么办——数据恢复</p>
+<p>数据模型：概念模型、逻辑模型</p>
+<p><strong>分两个模型的原因</strong>：逻辑模型 为了方便把 概念模型 存放到计算机中，事实上二者是同一概念。</p>
+<p><strong>数据模型的组成要素</strong>：数据结构、数据操作、数据的完整性约束条件</p>
+<p>概念模型：实体  属性  码  域  实体性  实体集  联系</p>
+<p>常用的逻辑数据模型：</p>
+<ul>
+<li>层次模型</li>
+<li>网状模型</li>
+<li>关系模型</li>
+<li>面向对象模型</li>
+<li>对象关系模型</li>
+</ul>
+<p><strong>E-R图</strong> —————- P19 实体-矩形  属性-椭圆  关系-菱形。</p>
+<p>关系模型：关系(Relation)、元组(Tuple)、属性(Attribute)、码(Key)、域(Domain)、分量。</p>
+<p>关系的<strong>完整性约束条件</strong>：实体完整性、参照完整性、用户定义完整性。</p>
+<p>优点：数学基础、概念单一(都是二维表)、存取路径对用户透明。</p>
+<p>缺点；效率、优化会增加开发难度。</p>
+<h3 id="数据库系统结构"><a href="#数据库系统结构" class="headerlink" title="数据库系统结构"></a>数据库系统结构</h3><p>数据库的三级模式：</p>
+<ul>
+<li>外模式：子/用户模式，数据库用户看见和使用的局部数据的逻辑结构和特征的描述。</li>
+<li>模式：逻辑模式，数据中全体数据的逻辑结构和特征的描述。</li>
+<li>内模式：存储模式，数据物理结构和存储方式的描述。</li>
+</ul>
+<p>数据库的二级映像：</p>
+<ul>
+<li>外模式/模式映像</li>
+<li>模式/内模式映像——定义了数据全局逻辑结构和存储结构之间对应关系。</li>
+</ul>
+<h2 id="关系数据库"><a href="#关系数据库" class="headerlink" title="关系数据库"></a>关系数据库</h2><p>看书做题就行</p>
+<p>候选码：关系中能唯一标识一个元组的值。</p>
+<p>主属性：候选码中的属性。</p>
+<p>关系的三种类型：基本类型(基本表)、查询表、视图表。</p>
+<p>注：</p>
+<p>连接操作中，可能会丢失一些值，为了保留这些值而留出空值叫做<strong>外连接</strong></p>
+<p><strong>要看除运算</strong> </p>
+<h3 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h3><p>特点：</p>
+<ul>
+<li>综合统一</li>
+<li>高度非过程化</li>
+<li>面向集合的操作方式</li>
+<li>以同一种语法结构提供多种使用方式</li>
+</ul>
+<p>修改基本表：</p>
+<p>ALTER  TABLE  &lt;表明&gt;</p>
+<p>例：</p>
+<p>​    ALTER TABLE Student ADD S_entrance DATE;</p>
+<p>​    ALTER TABLE Student ALTER COLUMN Sage INT;</p>
+<p>​    ALTER TABLE Course ADD UNIQUE(Cname);</p>
+<p>查询中的字符匹配：</p>
+<p>例：</p>
+<p>​    SELECT Sname, Sno, Ssex FROM Student WHERE Sname <strong>LIKE</strong> ‘刘%’;</p>
+<p>​    <em>匹配所有姓刘的同学</em></p>
+<p>​    SELECT Sname FROM Student WHERE Sname LIKE ‘欧阳__’;</p>
+<p>​    <em>匹配 欧阳X</em>   </p>
+<p>having</p>
+<p>ORDER BY ASC(升序) DESC(降序) <em>缺省情况为升序</em></p>
+<h2 id="数据库安全性"><a href="#数据库安全性" class="headerlink" title="数据库安全性"></a>数据库安全性</h2><p>计算机系统安全性：</p>
+<ul>
+<li>技术安全</li>
+<li>管理安全</li>
+<li>政策法律</li>
+</ul>
+<p>用户表示与鉴别Identification &amp; Authentication —— 最外层安全保护措施</p>
+<ul>
+<li>用户表示User Identification</li>
+<li>口令Password</li>
+</ul>
+<p>存取控制：</p>
+<ul>
+<li><p>定义用户权限，并将用户权限登记到数据字典中</p>
+</li>
+<li><p>合法权限检查</p>
+<ul>
+<li><p>自主存取控制(Discretionary Access Control, DAC)    C1级别</p>
+<p>用户对于不同的数据库对象由不同的存取权限，不同的用户对同一对象也有不同的权限，用户可将其拥有的存取权限授权给其他用户</p>
+</li>
+<li><p>强制存取控制(Mandatory Access Control, MAC)     B1级别</p>
+<p>每一个数据库对象被标以一定的密级，每一个用户也被授予某一级别的许可证。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Discretionary-Access-Control"><a href="#Discretionary-Access-Control" class="headerlink" title="Discretionary Access Control"></a>Discretionary Access Control</h3><p>授权与回收：</p>
+<ul>
+<li><p>GRANT</p>
+<p>GRANT SELECT ON TABLE Student TO U1;</p>
+</li>
+<li><p>REVOKE 回收权限，形式与上面类似</p>
+</li>
+</ul>
+<p><strong>数据库角色</strong>——权限的集合，用于简化授权</p>
+<p>1.角色的创建</p>
+<p>​    CREATE ROLE <rolename></p>
+<p>2.给角色授权</p>
+<p>​    略</p>
+<p>3.将一个角色授予其他用户</p>
+<p>​    略</p>
+<p>4.角色权限的收回</p>
+<h3 id="Mandatory-Access-Control"><a href="#Mandatory-Access-Control" class="headerlink" title="Mandatory Access Control"></a>Mandatory Access Control</h3><p>在MAC中DBMS所管理的全部实体被分为<strong>主体</strong>和<strong>客体</strong>两大类。</p>
+<p><strong>主体</strong>：系统中的活动实体，既包括DBMS所管理的实际用户，也包括代表用户的各进程。</p>
+<p><strong>客体</strong>：系统中的被动实体，包括文件、基本表、索引、视图，受主题操纵。</p>
+<p>对于主体和客体，DBMS为它们每个实例指派一个<strong>敏感度标记</strong>(Label)。分为<strong>绝密Top Secret、机密Secret、可信Confidential、公开Public</strong>，主体的敏感度标记称为<strong>许可证级别</strong>，客体的敏感度标记为<strong>密级</strong>。</p>
+<p><strong>规则</strong>：</p>
+<ul>
+<li>仅当主体的许可证级别大于或等于客体的密级，可读；</li>
+<li>仅当主题的许可证级别等于客体的密级，可写。</li>
+</ul>
+<p>原因：禁止了拥有高许可证级别的主体更新低密度的数据对象，造成敏感数据的泄露。</p>
+<h2 id="数据库完整性"><a href="#数据库完整性" class="headerlink" title="数据库完整性"></a>数据库完整性</h2><p>实体完整性、参照完整性、用户自定义的完整性</p>
+<p>DBMS为维护数据库的完整性，必须能够；</p>
+<p>1.提供定义完整性约束条件的机制</p>
+<p>2.提供完整性检查的方法</p>
+<p>3.违约处理</p>
+<p><strong>实体完整性的定义</strong>：列级约束条件、表级约束条件</p>
+<p><strong>实体完整性检查和违约处理</strong>：检查主码值是否唯一；检查主码的各属性是否为空</p>
+<p><strong>参照完整性定义</strong>：FOREIGN KEY，对外码的取值做一个约束：空值或存在值。</p>
+<p><strong>用户自定义完整性</strong>：1.NOT NULL;  2.UNIQUE;  3.CHECK;</p>
+<h2 id="关系数据库理论"><a href="#关系数据库理论" class="headerlink" title="关系数据库理论"></a>关系数据库理论</h2><p><strong>函数依赖</strong>(Functional Dependency,FD)：属性间类似数学中的函数y=f(x)的依赖关系，被称为函数依赖。记作X→Y。</p>
+<p>非平凡函数依赖：X→Y，但Y不是X的子集。</p>
+<p>平凡函数依赖：X→Y，Y是X的子集。</p>
+<p>完全函数依赖：X→Y，并且对于X的任何一个真子集X‘，都有Y不函数依赖于X’。</p>
+<p>部分函数依赖：X→Y，Y不 完全函数依赖 于X。u’s</p>
+<p>传递函数依赖：X→Y,  Y→Z, 且Y不→X。</p>
+<p>主属性(Prime Attribute)：任何候选码中的属性。</p>
+<p>非主属性(Nonprime Attribute)：不包含在任何码中的属性。也称非码属性(Non-key Attribute)。</p>
+<p><strong>第一范式</strong>(1NF)：每一个分量必须是不可分的数据项。</p>
+<p>第二范式(2NF)：1NF的基础下，每一个非主属性完全依赖于码</p>
+<p><strong>规范化</strong>(normalization)：一个低一级范式的关系模式，通过模式分解可以转化为若干个高一级范式的关系模式的集合。</p>
+<p>第三范式(3NF)：每一个非主属性 既不部份依赖于码，也不传递依赖于码。</p>
+<p>BCNF：关系模式R&lt;U,F&gt;∈1NF，若X→Y且Y不是X子集时，X必含有码。即，每一个决定因素都含有码。</p>
+<p>一个满足BCNF的关系模式：</p>
+<ul>
+<li>所有非主属性对于每一个码都是完全函数依赖</li>
+<li>所有的主属性对每一个不包含它的码，也是完全函数依赖</li>
+<li>没有任何属性完全函数依赖于飞马的任何一组属性</li>
+</ul>
+<p><strong>BCNF修正了3NF主属性内部部分函数依赖</strong></p>
+<p>多值依赖(Multivalued Dependency,MVD)</p>
+<h3 id="模式分解"><a href="#模式分解" class="headerlink" title="模式分解"></a>模式分解</h3><ul>
+<li>分解具有无损连接性(Lossless Join)——通过自然运算可复原</li>
+<li>分解要“保持函数依赖”(Preserve functional dependenct)</li>
+<li>分解既要保持函数依赖，又要具有无损连接性。</li>
+</ul>
+<p>—————————————————19分钟两类考题——————————————————–</p>
+<h2 id="关系查询处理和查询优化"><a href="#关系查询处理和查询优化" class="headerlink" title="关系查询处理和查询优化"></a>关系查询处理和查询优化</h2><p>DBMS查询处理分为4个阶段：查询分析、查询检查、查询优化、查询执行。</p>
+<p><strong>计算题：P268</strong></p>
+<h2 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h2><p>数据库设计重点： 概念设计-&gt;逻辑设计 ， 每一阶段目的是什么。</p>
+<p>数据库设计方法：新奥尔良方法、基于E-R模型的数据库设计方法、3NF的设计方法、ODL方法、UML方法</p>
+<p>数据库设计的基本步骤：</p>
+<p>准备工作：1.系统分析人员、数据库设计人员；2.用户代表和数据库管理员；3.应用开发人员</p>
+<ul>
+<li><p>需求分析</p>
+<ul>
+<li>需求分析任务：信息要求、处理要求、安全性与完整性要求</li>
+<li>需求分析方法：跟班作业、开调查会、请专人介绍、询问、设计调查表、查阅记录</li>
+<li>数据字典：机型详细的数据收集和数据分析所获得的主要结果<ul>
+<li>数据项：不可再分的数据单位</li>
+<li>数据结构：反映数据之间的组合关系</li>
+<li>数据流：数据结构在系统内传输的路径</li>
+<li>数据存储：数据结构停留或保存的地方</li>
+<li>处理过程：处理过程的具体处理逻辑一般用判定表或判定书来描述</li>
+</ul>
+</li>
+</ul>
+<p>小结：充分考虑可能的扩充和改变，使设计易于更改，系统易于扩充；强调用户参与。</p>
+</li>
+<li><p>概念结构设计</p>
+<p>特点：</p>
+<ul>
+<li>能真实充分反映现实世界</li>
+<li>易于理解</li>
+<li>易于更改</li>
+<li>易于向关系、网状、层次等数据模型转</li>
+</ul>
+<p>四类方法：(常用：自顶向下需求分析，自底向上设计概念结构)</p>
+<ul>
+<li>自顶向下</li>
+<li>自底向上</li>
+<li>逐步扩张</li>
+<li>混合策略</li>
+</ul>
+<p>视图的集成：多个E-R一次继承(难度较大)；逐步继承</p>
+<p>合并冲突：</p>
+<ul>
+<li>属性冲突：属性值的类型、取值范围、取值集合、单位不同。</li>
+<li>命名冲突：同名异义，异名同义。</li>
+<li>结构冲突：<ul>
+<li>同一对象在不同应用中具有不同的抽象，如职工在某一局部应用中为实体，另一为属性</li>
+<li>同一实体在不同E-R图中所包含的属性个数和属性排列次序不完全相同</li>
+<li>实体间的联系在不同的分E-R图中为不同的类型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>逻辑结构设计</p>
+</li>
+<li><p>物理结构设计</p>
+</li>
+<li><p>数据库实施</p>
+</li>
+<li><p>数据库运行与维护</p>
+</li>
+</ul>
+</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/NOTE/">NOTE</a><a class="link-muted mr-2" rel="tag" href="/tags/database/">database</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019/07/05/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%81%A2%E5%A4%8D%E6%8A%80%E6%9C%AF/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">[DB] 数据库恢复技术</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019/07/05/hugo%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E8%84%9A%E6%9C%AC%E6%9B%B4%E6%96%B0/"><span class="level-item">[Script] Hugo自动部署脚本更新</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><!--!--><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-04-03T14:53:53.000Z">2020-04-03</time></p><p class="title is-6"><a class="link-muted" href="/2020/04/03/leetcodeQ5/">[Leetcode] Q5最长回文串</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-27T11:46:35.000Z">2020-03-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/27/%E6%90%9E%E4%BA%8B/">[Golang] 自动健康上报</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-22T10:45:00.000Z">2020-03-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/22/GoModBest-Practice-NotReally/">[Golang] Go Mod Best-Practice(NotReally)</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-13T08:34:15.000Z">2020-03-13</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/13/telnet-server/">[Golang] 简单并发telnet服务器</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-08T15:39:04.000Z">2020-03-08</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/08/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BAFSM/">[Golang] 有限状态机FSM</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a><p class="size-small"><span>&copy; 2020 arithbar</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://fusidic.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

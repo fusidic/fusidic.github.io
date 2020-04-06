@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Linux用户权限管理 - Fusidic&#039;s blog</title><meta description="指令 添加用户 useradd -d &amp;#x2F;home&amp;#x2F;test test -m，创建用户test(自动生成目录)，该用户属于test用户组 useradd -d &amp;#x2F;home&amp;#x2F;a a -g test -m，创建用户a，属于test用户组 -d：指定用户登录系统时的主目录 -m：自动建立目录 -g：指定组名称  设置密码 passwd test  删除用户 userdel test删除test用户，但并不"><meta property="og:type" content="blog"><meta property="og:title" content="Linux用户权限管理"><meta property="og:url" content="https://fusidic.github.io/"><meta property="og:site_name" content="Fusidic&#039;s blog"><meta property="og:description" content="指令 添加用户 useradd -d &amp;#x2F;home&amp;#x2F;test test -m，创建用户test(自动生成目录)，该用户属于test用户组 useradd -d &amp;#x2F;home&amp;#x2F;a a -g test -m，创建用户a，属于test用户组 -d：指定用户登录系统时的主目录 -m：自动建立目录 -g：指定组名称  设置密码 passwd test  删除用户 userdel test删除test用户，但并不"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2019-07-08T02:31:24.000Z"><meta property="article:modified_time" content="2020-04-06T15:21:27.244Z"><meta property="article:author" content="arithbar"><meta property="article:tag" content="NOTE"><meta property="article:tag" content="linux"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://fusidic.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://fusidic.github.io/2019/07/08/Linux%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"},"headline":"Fusidic's blog","image":["https://fusidic.github.io/img/og_image.png"],"datePublished":"2019-07-08T02:31:24.000Z","dateModified":"2020-04-06T15:21:27.244Z","author":{"@type":"Person","name":"arithbar"},"description":"指令 添加用户 useradd -d &#x2F;home&#x2F;test test -m，创建用户test(自动生成目录)，该用户属于test用户组 useradd -d &#x2F;home&#x2F;a a -g test -m，创建用户a，属于test用户组 -d：指定用户登录系统时的主目录 -m：自动建立目录 -g：指定组名称  设置密码 passwd test  删除用户 userdel test删除test用户，但并不"}</script><link rel="canonical" href="https://fusidic.github.io/2019/07/08/Linux%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"><link rel="icon" href="/img/favicon.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/fusidic"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-07-08T02:31:24.000Z" title="2019-07-08T02:31:24.000Z">2019-07-08</time><span class="level-item"><a class="link-muted" href="/categories/Operations/">Operations</a></span><span class="level-item">3 分钟 读完 (大约 457 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Linux用户权限管理</h1><div class="content"><h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><ul>
+<li><p>添加用户</p>
+<p><code>useradd -d /home/test test -m</code>，创建用户test(自动生成目录)，该用户属于test用户组</p>
+<p><code>useradd -d /home/a a -g test -m</code>，创建用户a，属于test用户组</p>
+<p>-d：指定用户登录系统时的主目录</p>
+<p>-m：自动建立目录</p>
+<p>-g：指定组名称</p>
+</li>
+<li><p>设置密码</p>
+<p><code>passwd test</code></p>
+</li>
+<li><p>删除用户</p>
+<p><code>userdel test</code>删除test用户，但并不删除<code>/home/test</code></p>
+<p><code>userdel -r test</code>删除test用户与其目录</p>
+</li>
+<li><p>切换用户</p>
+<p><code>su</code></p>
+</li>
+<li><p>查看当前用户组</p>
+<ul>
+<li><code>cat /etc/group</code></li>
+<li><code>groupmod</code>+三次tab键</li>
+</ul>
+</li>
+<li><p>组账号操作</p>
+<ul>
+<li>添加组：<code>groupadd</code></li>
+<li>删除组：<code>groupdel</code></li>
+<li>查看组：<code>cat /etc/group</code></li>
+<li>修改用户所在组：<code>usermod -g group_name user_name</code></li>
+</ul>
+</li>
+<li><p>查看用户组成员</p>
+<p><code>groups group_name</code></p>
+</li>
+<li><p>为新用户添加sudo权限</p>
+<p><code>sudo usermod -a -G adm user_name</code></p>
+<p><code>sudo usermod -a -G sudo user_name</code></p>
+</li>
+</ul>
+<p>  <strong>实例：</strong></p>
+<p>  linux环境下创建新用户在使用docker中会遇到<code>permission denied</code>的问题，这是由于docker启动守护进程的时候，会默认赋予docker用户组的成员读写unix socket的权限，因此，将新用户加入到docker用户组中，问题就可以解决了：</p>
+<p>  <code>sudo usermod -a -G docker zjs</code></p>
+<p>  之后需要更新用户组<code>newgrp docker</code></p>
+<ul>
+<li><p>修改文件权限</p>
+<ul>
+<li><p>字母法：<code>chmod u/g/o/a +/-/= rwx file_name</code></p>
+<table>
+<thead>
+<tr>
+<th>所有者</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u</td>
+<td>user</td>
+</tr>
+<tr>
+<td>g</td>
+<td>group</td>
+</tr>
+<tr>
+<td>o</td>
+<td>other</td>
+</tr>
+<tr>
+<td>a</td>
+<td>all</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>+ - =</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>增加权限</td>
+</tr>
+<tr>
+<td>-</td>
+<td>撤销权限</td>
+</tr>
+<tr>
+<td>=</td>
+<td>设定权限</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>r w x</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>read</td>
+</tr>
+<tr>
+<td>w</td>
+<td>write</td>
+</tr>
+<tr>
+<td>x</td>
+<td>excute</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>数字法：</p>
+<p><code>chomod 777 test/ -R</code> <code>-R</code>表示级联授权</p>
+<p>777：所有者用户/组内其他用户/其他组用户 = rwx/rwx/rwx</p>
+</li>
+</ul>
+</li>
+<li><p>修改文件所有者</p>
+<p> <code>chown user_name file_name</code></p>
+</li>
+<li><p>修改文件所属组</p>
+</li>
+<li><p><code>chgrp group_name file_name</code></p>
+</li>
+</ul>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>添加用户赋予权限：</p>
+<ul>
+<li><code>sudo vi /etc/sudoers</code></li>
+<li>在<code>root ALL=(ALL) ALL</code>下添加一行<code>test ALL=(ALL) ALL</code></li>
+</ul>
+</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/NOTE/">NOTE</a><a class="link-muted mr-2" rel="tag" href="/tags/linux/">linux</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019/07/10/%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91-UbuntuDNS%E9%85%8D%E7%BD%AE/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">[Debug] 踩过的坑-UbuntuDNS配置</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019/07/08/%E5%AE%89%E8%A3%85hadoop%E7%9B%B8%E5%85%B3%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"><span class="level-item">[NOTE] 安装hadoop相关注意事项</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><!--!--><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-04-03T14:53:53.000Z">2020-04-03</time></p><p class="title is-6"><a class="link-muted" href="/2020/04/03/leetcodeQ5/">[Leetcode] Q5最长回文串</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-27T11:46:35.000Z">2020-03-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/27/%E6%90%9E%E4%BA%8B/">[Golang] 自动健康上报</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-22T10:45:00.000Z">2020-03-22</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/22/GoModBest-Practice-NotReally/">[Golang] Go Mod Best-Practice(NotReally)</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-13T08:34:15.000Z">2020-03-13</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/13/telnet-server/">[Golang] 简单并发telnet服务器</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-03-08T15:39:04.000Z">2020-03-08</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/08/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BAFSM/">[Golang] 有限状态机FSM</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a><p class="size-small"><span>&copy; 2020 arithbar</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://fusidic.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
