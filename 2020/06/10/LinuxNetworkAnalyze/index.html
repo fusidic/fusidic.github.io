@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>LinuxNetworkAnalyze - Fusidic&#039;s blog</title><meta description="灵活的使用各种网络分析工具，可以有效地快速定位问题。"><meta property="og:type" content="blog"><meta property="og:title" content="LinuxNetworkAnalyze"><meta property="og:url" content="https://fusidic.github.io/"><meta property="og:site_name" content="Fusidic&#039;s blog"><meta property="og:description" content="灵活的使用各种网络分析工具，可以有效地快速定位问题。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/10/DJlbh835NRFwqya.png"><meta property="og:image" content="https://i.loli.net/2020/06/10/rbe8WsFYyMqNl4k.png"><meta property="article:published_time" content="2020-06-10T03:07:42.000Z"><meta property="article:modified_time" content="2020-06-10T03:07:42.569Z"><meta property="article:author" content="arithbar"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/10/DJlbh835NRFwqya.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://fusidic.github.io/2020/06/10/LinuxNetworkAnalyze/"},"headline":"Fusidic's blog","image":["https://i.loli.net/2020/06/10/DJlbh835NRFwqya.png","https://i.loli.net/2020/06/10/rbe8WsFYyMqNl4k.png"],"datePublished":"2020-06-10T03:07:42.000Z","dateModified":"2020-06-10T03:07:42.569Z","author":{"@type":"Person","name":"arithbar"},"description":"灵活的使用各种网络分析工具，可以有效地快速定位问题。"}</script><link rel="canonical" href="https://fusidic.github.io/2020/06/10/LinuxNetworkAnalyze/"><link rel="icon" href="/img/favicon.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/fusidic"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-06-10T03:07:42.000Z" title="2020-06-10T03:07:42.000Z">2020-06-10</time><span class="level-item">25 分钟 读完 (大约 3736 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">LinuxNetworkAnalyze</h1><div class="content"><p>灵活的使用各种网络分析工具，可以有效地快速定位问题。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th align="center"><strong>Linux</strong></th>
+<th align="center"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><a href="#nslookup">nslookup</a>/<a href="#dig">dig</a></td>
+<td align="center">查询本机域名解析情况</td>
+</tr>
+<tr>
+<td align="center"><a href="#netstat">netstat</a></td>
+<td align="center">多种网络栈和接口统计信息</td>
+</tr>
+<tr>
+<td align="center"><a href="#ifconfig">ifconfig</a></td>
+<td align="center">网络接口配置</td>
+</tr>
+<tr>
+<td align="center"><a href="#ping">ping</a></td>
+<td align="center">测试网络连通性</td>
+</tr>
+<tr>
+<td align="center"><a href="#traceroute">traceroute</a></td>
+<td align="center">测试网络路由</td>
+</tr>
+<tr>
+<td align="center"><a href="#tcpdump">tcpdump</a></td>
+<td align="center">网络数据包嗅探器</td>
+</tr>
+<tr>
+<td align="center"><a href="#Wireshark">Wireshark</a></td>
+<td align="center">图形化网络数据包检查器</td>
+</tr>
+<tr>
+<td align="center"><a href="#nicstat">nicstat</a></td>
+<td align="center">网络接口吞吐量和使用率</td>
+</tr>
+<tr>
+<td align="center"><a href="#DTrace">DTrace/perf</a></td>
+<td align="center">TCP/IP栈跟踪：连接、数据包、丢包、延时</td>
+</tr>
+<tr>
+<td align="center"><a href="#pathchar">pathchar</a></td>
+<td align="center">确定网络路径特征</td>
+</tr>
+</tbody></table>
+<br/>
+
+<h2><span id="nslookup/dig">nslookup/dig</span></h2>
+
+<p><code>nslookup</code> 常用来查询本机域名解析情况，<code>dig</code> (domain information groper) 相较前者提供更多的信息，包括 NS 记录、A 记录、MX 记录等相关信息。</p>
+<p>Fedora / Centos系统:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum -y install <span class="built_in">bind</span>-utils</span><br></pre></td></tr></table></figure>
+
+<p>Debian / Ubuntu系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get -y install dnsutils</span><br></pre></td></tr></table></figure>
+
+<h3><span id="nslookup">nslookup</span></h3>
+
+<p><strong>简单介绍使用nslookup检查DNS信息的方法。</strong><br>1、终端中输入命令：nslookup<br>2、设置nslookup使用的DNS服务器，输入server DNS_server_ip并回车；<br>3、检查某个DNS域名的MX记录，先输入set q=mx，回车后输入想要检查的DNS域名，例如teddysun.com；<br>4、显示其他记录，先输入set q=any，回车后输入想要查询的记录的名称。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ nslookup</span><br><span class="line">&gt; server 114.114.114.114</span><br><span class="line">Default server: 114.114.114.114</span><br><span class="line">Address: 114.114.114.114<span class="comment">#53</span></span><br><span class="line">&gt; <span class="built_in">set</span> q=mx</span><br><span class="line">&gt; google.com</span><br><span class="line">Server:		114.114.114.114</span><br><span class="line">Address:	114.114.114.114<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">google.com	mail exchanger = 10 aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 30 alt2.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 20 alt1.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 50 alt4.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 40 alt3.aspmx.l.google.com.</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:</span><br><span class="line">&gt; <span class="built_in">set</span> q=any</span><br><span class="line">&gt; www.google.com</span><br><span class="line">Server:		114.114.114.114</span><br><span class="line">Address:	114.114.114.114<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:	www.google.com</span><br><span class="line">Address: 31.13.72.23</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:</span><br><span class="line">&gt; <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h3><span id="dig">dig</span></h3>
+
+<p><strong>默认查询</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ dig www.baidu.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.11.3-1ubuntu1.12-Ubuntu &lt;&lt;&gt;&gt; www.baidu.com</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50658</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 65494</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.baidu.com.			IN	A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.baidu.com.		81	IN	CNAME	www.a.shifen.com.</span><br><span class="line">www.a.shifen.com.	80	IN	A	180.101.49.11</span><br><span class="line">www.a.shifen.com.	80	IN	A	180.101.49.12</span><br><span class="line"></span><br><span class="line">;; Query time: 49 msec</span><br><span class="line">;; SERVER: 127.0.0.53<span class="comment">#53(127.0.0.53)</span></span><br><span class="line">;; WHEN: Mon Jun 08 02:43:46 UTC 2020</span><br><span class="line">;; MSG SIZE  rcvd: 101</span><br></pre></td></tr></table></figure>
+
+<p>分段解释获取的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">; &lt;&lt;&gt;&gt; DiG 9.11.3-1ubuntu1.12-Ubuntu &lt;&lt;&gt;&gt; www.baidu.com</span><br><span class="line">;; global options: +cmd</span><br></pre></td></tr></table></figure>
+
+<p>DiG 默认版本号，查询的域名，默认的全局参数为 <code>+cmd</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50658</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1</span><br></pre></td></tr></table></figure>
+
+<p><code>opcode</code> 操作码为 <code>QUERY</code> 查询，<code>status</code> 表示查询操作状态为 <code>NOERROR</code> 无错误。</p>
+<p><code>flags</code> 标志位：</p>
+<ul>
+<li><code>qr</code> : 表示 query ，查询操作；</li>
+<li><code>rd</code> : 表示 recursion desired ，指希望通过递归查询操作；</li>
+<li><code>ra</code> : 表示 recursion available ，DNS 服务器支持递归查询操作；</li>
+<li><code>aa</code> : 表示 authoritative answer ，权威回复，即查询结果为域名服务器提供，而不是缓存服务器提供；</li>
+<li><code>QUERY</code> : 查询数，对应下面 QUESTION SECTION 中的记录数；</li>
+<li><code>ANSWER</code> : 结果数，对应下方 ANSWER SECTION 中的记录数；</li>
+<li><code>AUTHORITY</code> : 权威域名服务器记录数，代表该域名有 0 个权威域名服务器可供域名解析用；</li>
+<li><code>ADDITIONAL</code> : 额外记录数，当使用 <code>+comments</code> 参数时不显示该部分。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 65494</span><br></pre></td></tr></table></figure>
+
+<p>有关 DNS 扩展机制 (EDNS) 的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.baidu.com.			IN	A</span><br></pre></td></tr></table></figure>
+
+<p>所查询域名的输出信息，默认为 <code>A 记录</code> ，<code>+noquestion</code> 参数可以不显示该部分</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.baidu.com.		81	IN	CNAME	www.a.shifen.com.</span><br><span class="line">www.a.shifen.com.	80	IN	A	180.101.49.11</span><br><span class="line">www.a.shifen.com.	80	IN	A	180.101.49.12</span><br></pre></td></tr></table></figure>
+
+<p>查询结果：</p>
+<table>
+<thead>
+<tr>
+<th align="center">域名</th>
+<th align="center">TTL (缓存时间/sec)</th>
+<th align="center">查询类别</th>
+<th align="center">解析地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><a href="http://www.a.shifen.com">www.a.shifen.com</a>.</td>
+<td align="center">80</td>
+<td align="center">IN A</td>
+<td align="center">180.1010.49.11</td>
+</tr>
+</tbody></table>
+<p>查询类别：<code>A</code> 为 <code>A 记录</code> , <code>CNAME</code> 为别名记录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;; Query time: 49 msec</span><br><span class="line">;; SERVER: 127.0.0.53<span class="comment">#53(127.0.0.53)</span></span><br><span class="line">;; WHEN: Mon Jun 08 02:43:46 UTC 2020</span><br><span class="line">;; MSG SIZE  rcvd: 101</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>Query time</code> : 查询耗时；</p>
+</li>
+<li><p><code>SERVER</code> : 查询使用的服务器地址和端口，这里显示的 <code>127.0.0.53</code> 为本地回环地址，表示使用的是本地的 DNS 缓存，在 <code>kubernetes</code> 中使用本地缓存作为解析地址可能会导致 <code>CoreDNS</code> 出现一下<a href="https://github.com/coredns/coredns/issues/1647">问题</a> </p>
+<p>  可在 <code>/etc/resolv.conf</code> 中修改 DNS 服务器的地址，<code>$ sudo service systemd-networkd restart</code> 或 <code>$ netplan apply</code> ，通过 <code>$ systemd-resolve --status enp0s25</code> 查看 (enp0s25 为连接对应网卡)</p>
+</li>
+<li><p><code>WHEN</code> : 查询的时间</p>
+</li>
+<li><p><code>MSG SIZE rcvd</code> : 回复的大小，101 字节</p>
+</li>
+</ul>
+<p>命令以 <code>+nostats</code> 作为参数，可以不显示该部分。</p>
+<p><code>$ dig www.google.com +noall +answer</code> 只返回查询结果。</p>
+<p><strong>精简查询</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig www.google.com +short</span><br></pre></td></tr></table></figure>
+
+<p><strong>查询路径</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig www.google.com +trace</span><br></pre></td></tr></table></figure>
+
+<p><strong>指定DNS服务器</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig @8.8.8.8 www.google.com</span><br></pre></td></tr></table></figure>
+
+<p><strong>指定查询类型</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询A记录（默认）</span></span><br><span class="line">$ dig +nocmd www.sina.com a +noall +answer</span><br><span class="line">www.sina.com.       49  IN  CNAME   us.sina.com.cn.</span><br><span class="line">us.sina.com.cn.     49  IN  CNAME   spool.grid.sinaedge.com.</span><br><span class="line">spool.grid.sinaedge.com. 48 IN  A   202.102.94.124</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询CNAME记录</span></span><br><span class="line">$ dig +nocmd www.sina.com cname +noall +answer</span><br><span class="line">www.sina.com.       34  IN  CNAME   us.sina.com.cn.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询txt记录</span></span><br><span class="line">$ dig +nocmd google.com txt +noall +answer</span><br><span class="line">google.com.     241 IN  TXT <span class="string">"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8="</span></span><br><span class="line">google.com.     241 IN  TXT <span class="string">"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e"</span></span><br><span class="line">google.com.     241 IN  TXT <span class="string">"v=spf1 include:_spf.google.com ~all"</span></span><br><span class="line">google.com.     241 IN  TXT <span class="string">"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289"</span></span><br><span class="line">google.com.     241 IN  TXT <span class="string">"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询MX记录</span></span><br><span class="line">$ dig +nocmd google.com mx +noall +answer</span><br><span class="line">google.com.     428 IN  MX  30 alt2.aspmx.l.google.com.</span><br><span class="line">google.com.     428 IN  MX  20 alt1.aspmx.l.google.com.</span><br><span class="line">google.com.     428 IN  MX  40 alt3.aspmx.l.google.com.</span><br><span class="line">google.com.     428 IN  MX  50 alt4.aspmx.l.google.com.</span><br><span class="line">google.com.     428 IN  MX  10 aspmx.l.google.com.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询NS记录</span></span><br><span class="line">$ dig +nocmd google.com ns +noall +answer</span><br><span class="line">google.com.     121046  IN  NS  ns3.google.com.</span><br><span class="line">google.com.     121046  IN  NS  ns2.google.com.</span><br><span class="line">google.com.     121046  IN  NS  ns4.google.com.</span><br><span class="line">google.com.     121046  IN  NS  ns1.google.com.</span><br></pre></td></tr></table></figure>
+
+<p><strong>反向查询</strong></p>
+<p>查询与特定 IP 地址关联的域名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig -x 8.8.8.8 +noall +answer</span><br></pre></td></tr></table></figure>
+
+<p><strong>批量查询</strong></p>
+<p>将待查询域名写入文本文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig -f searchlist +noall +answer</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<h2><span id="netstat">netstat</span></h2>
+
+<p><code>netstat</code> 主要用于对网络接口中的数据进行统计、查询。</p>
+<table>
+<thead>
+<tr>
+<th align="center">Args</th>
+<th align="center">Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>-a</code></td>
+<td align="center">列出所有端口的连接，包括 TCP 和 UDP</td>
+</tr>
+<tr>
+<td align="center"><code>-at</code></td>
+<td align="center">仅列出 TCP 端口的连接</td>
+</tr>
+<tr>
+<td align="center"><code>-au</code></td>
+<td align="center">仅列出 UDP 端口的连接</td>
+</tr>
+<tr>
+<td align="center"><code>-l</code></td>
+<td align="center">所有活跃的套接字</td>
+</tr>
+<tr>
+<td align="center"><code>-s</code></td>
+<td align="center">网络统计数据，按照协议分类</td>
+</tr>
+<tr>
+<td align="center"><code>-p</code></td>
+<td align="center">同时列出进程 PID</td>
+</tr>
+<tr>
+<td align="center"><code>-i</code></td>
+<td align="center">同时列出网卡 interface</td>
+</tr>
+<tr>
+<td align="center"><code>-r</code></td>
+<td align="center">列出路由表，类似 <code>route</code></td>
+</tr>
+<tr>
+<td align="center"><code>-n</code></td>
+<td align="center">默认下 netstat 会反向解析每个 IP 对应的主机名，<code>-n</code> 禁用反向域名解析，加快查询速度</td>
+</tr>
+<tr>
+<td align="center"><code>-e</code></td>
+<td align="center">显示更多信息 (用户等)</td>
+</tr>
+<tr>
+<td align="center"><code>-c</code></td>
+<td align="center">持续输出信息</td>
+</tr>
+<tr>
+<td align="center"><code>-g</code></td>
+<td align="center">输出 IPv4 和 IPv6 的多播组信息</td>
+</tr>
+</tbody></table>
+<br/>
+
+<h2 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h2><h2><span id="ifconfig">ifconfig</span></h2>
+
+<p><code>ifconfig</code> 主要用于网络接口相关的操作，一般直接使用 <code>$ ifconfig</code> 就会输出目前已经被启动的网卡，不管改接口有没有被配置地址。</p>
+<h4 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig</span><br><span class="line">enp0s25: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 192.168.1.253  netmask 255.255.255.0  broadcast 192.168.1.255</span><br><span class="line">        inet6 fe80::1a66:daff:fe36:d04f  prefixlen 64  scopeid 0x20&lt;link&gt;</span><br><span class="line">        ether 18:66:da:36:d0:4f  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 292604155  bytes 90957478651 (90.9 GB)</span><br><span class="line">        RX errors 0  dropped 3498  overruns 0  frame 0</span><br><span class="line">        TX packets 263018479  bytes 39984291886 (39.9 GB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line">        device interrupt 20  memory 0xf3500000-f3520000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>enp0s25</code> : 网卡名，注意 <code>lo</code> 为 <code>loopback</code> ；</li>
+<li><code>mtu</code> : 最大传输单元 (Maximum Transmission Unit, MTU) 数据链路层，规定作能接受数据服务单元的最大尺寸，是包或帧的最大长度，如果 MTU 过大，路由器会拒绝转发；</li>
+<li><code>inet addr</code> : IPv4 的 IP 地址。</li>
+<li><code>inet6 addr</code> : 是 IPv6 的版本的 IP。</li>
+<li><code>ether</code> : 网卡地址</li>
+<li><code>txqueuelen</code> : 代表用来传输数据的缓冲区的储存长度。</li>
+<li><code>RX</code> : 那一行代表的是网络由启动到目前为止的数据包接收情况<ul>
+<li><code>bytes</code> : 接收的字节总量；</li>
+<li><code>packets</code> 代表数据包数；</li>
+<li><code>errors</code> 代表数据包发生错误的数量；</li>
+<li><code>dropped</code> 代表数据包由于有问题而遭丢弃的数量等；</li>
+<li><code>overruns</code> 表示 fifo 队列中 ring-buffer 缓冲溢出，接受包的数量超出了内核的 IO 上限；</li>
+<li><code>frame</code> 表示接收的帧未对齐。</li>
+</ul>
+</li>
+<li><code>TX</code> : 与 RX 相反，为网络由启动到目前为止的发送情况。<ul>
+<li><code>carrier</code> : 由传输链路引起的错误 (存疑)；</li>
+<li><code>collisions</code> : 代表数据包碰撞的情况。</li>
+</ul>
+</li>
+<li><code>Interrupt</code> <code>Memory</code> : 网卡硬件的数据，IRQ 岔断与内存地址。</li>
+</ul>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><p>启动或关闭制定网卡</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig eth0 up        <span class="comment"># 启动 &lt;br&gt;ifcfg etho up           # 启动</span></span><br><span class="line">$ ifconfig eth0 down      <span class="comment"># 关闭&lt;br&gt;ifcfg eth0 down         # 关闭</span></span><br><span class="line">$ ifconfig eth0 reload    <span class="comment"># 重启</span></span><br></pre></td></tr></table></figure>
+
+<p>为网卡配置和删除 IPv4/IPv6 地址 (临时生效，永久修改需要更改配置文件)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig eth0 192.168.25.166 netmask 255.255.255.0 up</span><br><span class="line">$ ifconfig eth0 192.168.25.166/24 up       <span class="comment"># 效果同上</span></span><br><span class="line">$ ip addr add 192.168.25.166/24  dev eth0  <span class="comment"># 效果同上</span></span><br><span class="line"></span><br><span class="line">$ ifconfig eth0 add 33ffe:3240:800:1005::2/64             <span class="comment"># 为网卡eth0配置IPv6地址 </span></span><br><span class="line">$ ifconfig eth0 del 33ffe:3240:800:1005::2/64              <span class="comment"># 为网卡eth0删除IPv6地址</span></span><br></pre></td></tr></table></figure>
+
+<p>修改 MAC 地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig eth0 down //关闭网卡</span><br><span class="line">$ ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE //修改MAC地址</span><br><span class="line">$ ifconfig eth0 up    //启动网卡</span><br></pre></td></tr></table></figure>
+
+<p>启用或关闭 ARP 协议</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig eth0 down //关闭网卡</span><br><span class="line">$ ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE //修改MAC地址</span><br><span class="line">$ ifconfig eth0 up    //启动网卡</span><br></pre></td></tr></table></figure>
+
+<p>设置最大传输单元</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig eth0 mtu 1500</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<h2><span id="ping">ping</span></h2>
+
+<p><code>ping</code> 命令用来测试主机之间的网络连通性，执行 <code>ping</code> 指令会使用 ICMP 传输协议。</p>
+<h4 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h4><p>由于 IP 协议并不提供可靠传输，并不能在丢包发生时通知传输层是否丢包以及丢包的原因。<a href="https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMP</a> (Internet Control Message Protocol) 基于 IP 协议工作，可以把它归为网络层协议，ICMP 协议可以确认 IP 包是否成功到达目标地址，以及通知在发送过程中 IP 包被丢弃的原因 (需要注意，ICMP 只能搭配 IPv4 使用，如果是 IPv6 的情况，需要使用 ICMPv6)</p>
+<p><strong>ICMP 报文格式</strong></p>
+<p>在讲到 ICMP 报文格式之前，我们先来回忆一下 IP 报文的格式：</p>
+<p><img src="https://i.loli.net/2020/06/10/DJlbh835NRFwqya.png" alt="IP报文"></p>
+<p>IPv4 数据报分为部首与数据两部分，部首中包含 IP 数据报的一些基本信息。ICMP 报文是包含在 IP 数据报的数据部分中的，当 IP 数据报首部的协议字段为 1时，说明这是一个 ICMP 报文。</p>
+<blockquote>
+<p>IP 数据报的协议部分指示了其<strong>数据部分</strong>应该交给哪个特定的运输层协议，例如 <code>6 -&gt; TCP</code> <code>17 -&gt; UDP</code> ，具体参见 <a href="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">IANA Protocol Numbers</a> 。</p>
+<p>协议号所起的作用，类似运输层报文段中的 “端口号” 字段，<strong>协议号</strong>将网络层和运输层结合，而<strong>端口号</strong>则将运输层和应用层结合。</p>
+</blockquote>
+<p>下面是 ICMP 的报文：</p>
+<p><img src="https://i.loli.net/2020/06/10/rbe8WsFYyMqNl4k.png" alt="ICMP.png"></p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">type</td>
+<td align="center">占一字节，标识ICMP报文的类型，从类型值来看ICMP报文可以分为两大类。第一类是取值为1~127的差错报文，第2类是取值128以上的信息报文</td>
+</tr>
+<tr>
+<td align="center">code</td>
+<td align="center">占一字节，标识对应ICMP报文的代码。它与类型字段一起共同标识了ICMP报文的详细类型</td>
+</tr>
+<tr>
+<td align="center">checksum</td>
+<td align="center">这是对包括 ICMP 报文数据部分在内的整个 ICMP 数据报的校验和，以检验报文在传输过程中是否出现了差错（其计算方法与 IP 报头中的校验和计算方法是一样的）</td>
+</tr>
+</tbody></table>
+<p>常见的 <code>type</code> 类型，注意这一部分，涉及 <code>ping</code> 与 <code>traceroute</code> 的实现原理：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型（十进制）</th>
+<th align="center">内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">回送应答</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">目标不可达</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">原点抑制</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">重定向或改变路由</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center">回送请求</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">路由器公告</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">路由器请求</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">超时</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">时间戳请求</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="center">时间戳应答</td>
+</tr>
+</tbody></table>
+<p><code>ping</code> 操作中就用到了类型为 <code>0</code> 与 <code>8</code> 的 ICMP 报文。</p>
+<h4 id="使用参数"><a href="#使用参数" class="headerlink" title="使用参数"></a>使用参数</h4><p>详见<a href="https://ss64.com/bash/ping.html">此文</a></p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>Option</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>-a</code></td>
+<td>当 ping 通时发出蜂鸣；</td>
+</tr>
+<tr>
+<td align="center"><code>-A</code></td>
+<td>自适应 ping，根据 ping 包往返时间确定 ping 的速度；</td>
+</tr>
+<tr>
+<td align="center"><code>-b</code></td>
+<td>允许 ping 一个广播地址；</td>
+</tr>
+<tr>
+<td align="center"><code>-B</code></td>
+<td>Use this option if you do not want to allow the ping to change the source address of the probe</td>
+</tr>
+<tr>
+<td align="center"><code>-c</code></td>
+<td><code>-c &lt;Count&gt;</code> ping 指定次数为 Count；</td>
+</tr>
+<tr>
+<td align="center"><code>-d</code></td>
+<td>使用 Socket 的 SO_DEBUG 功能；</td>
+</tr>
+<tr>
+<td align="center"><code>-f</code></td>
+<td>洪泛检测，以每秒100次甚至更高的速度 ping 一台主机；</td>
+</tr>
+<tr>
+<td align="center"><code>-i</code></td>
+<td><code>-i &lt;Interval&gt;</code> 间隔 Interval 发送 ping 包，默认为1秒；</td>
+</tr>
+<tr>
+<td align="center"><code>-I</code></td>
+<td><code>-I &lt;Interface Address&gt;</code> 指定网卡接口或者指定本机地址发送数据包，主要用于 ping 本地的 IPv6 地址；</td>
+</tr>
+<tr>
+<td align="center"><code>-l</code></td>
+<td><code>-l &lt;Preload&gt;</code> 不需要等待回应，直接发出 Preload 个包，对于超出三个的需要 root 权限执行；</td>
+</tr>
+<tr>
+<td align="center"><code>-m</code></td>
+<td><code>-m &lt;Mark&gt;</code> 设置 mark；</td>
+</tr>
+<tr>
+<td align="center"><code>-M</code></td>
+<td><code>-M &lt;HINT&gt;</code> 设置 MTU 的分片策略：<code>do</code> 禁止分片，即使包被丢弃；<code>want</code> 当包过大时分片；<code>dont</code> 不设置分片标志 (DF Flag)；</td>
+</tr>
+<tr>
+<td align="center"><code>-n</code></td>
+<td>不将 ip 地址转换为主机名；</td>
+</tr>
+<tr>
+<td align="center"><code>-p</code></td>
+<td><code>-p &lt;Pattern&gt;</code> 指定填充 ping 数据包的十六进制内容，在诊断与数据相关的网络错误时这个选项会很有用，如 <code>-p ff</code> ；</td>
+</tr>
+<tr>
+<td align="center"><code>-q</code></td>
+<td>静默输出，不显示任何封包的信息，只显示最后的结果；</td>
+</tr>
+<tr>
+<td align="center"><code>-r</code></td>
+<td>忽略路由表直接送到连接的网络上的主机上。如果 <em>主机</em> 不在一个直接连接的网络上，<strong>ping</strong> 命令将产生一个错误消息， 这个选项可以被用来通过一个不再有路由经过的接口去 ping 一个本地主机；</td>
+</tr>
+<tr>
+<td align="center"><code>-Q</code></td>
+<td><code>-Q &lt;Tos&gt;</code> 设置 QoS (Quality of Service)，它是ICMP数据报相关位；可以是十进制或十六进制数，详见 rfc1349 和 rfc2474 文档；</td>
+</tr>
+<tr>
+<td align="center"><code>-R</code></td>
+<td>记录 ping 的路由过程 (IPv4 only)；(<strong>注：</strong> IP 头仅仅大到适合 9 个这样的路由。而且，许多主机和网关忽略这个选项。)</td>
+</tr>
+<tr>
+<td align="center"><code>-s</code></td>
+<td><code>-s &lt;Size&gt;</code> 指定发送数据的字节数，默认为56字节，与8字节的 ICMP 头数据合并为 64 字节的 ICMP 数据；</td>
+</tr>
+<tr>
+<td align="center"><code>-S</code></td>
+<td><code>-S &lt;Host/IP addr&gt;</code> 将 IP 地址用作发出的 ping 信息包中的源地址。在具有不止一个 IP 地址的主机上，可以使用 <strong>-S</strong> 标志来强制源地址为除了软件包在其上发送的接口的 IP 地址外的任何地址。如果 IP 地址不是以下机器接口地址之一，则返回错误并且不进行任何发送；</td>
+</tr>
+<tr>
+<td align="center"><code>-T</code></td>
+<td><code>-T &lt;TTL&gt;</code> 设置 TTL (Time to Live)，指定 IP 包被路由器丢弃之前的生存时间；</td>
+</tr>
+<tr>
+<td align="center"><code>-v</code></td>
+<td>使 ping 处于 verbose 方式，它要 ping 命令除了打印 ECHO-RESPONSE 数据包之外，还打印其它所有返回的 ICMP 数据包；</td>
+</tr>
+<tr>
+<td align="center"><code>-V</code></td>
+<td>显示版本并退出；</td>
+</tr>
+<tr>
+<td align="center"><code>-w</code></td>
+<td><code>-w &lt;Deadline&gt;</code> 设置截止时间(秒)，在 ping 退出之前，查看有多少包成功地发送接收；</td>
+</tr>
+<tr>
+<td align="center"><code>-W</code></td>
+<td>设置等待超时时间。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>有人会问 telnet 是 <code>23</code> 端口，ssh 是 <code>22</code> 端口，那 ping 是什么端口吖？</p>
+<p>其实要是仔细阅读上文，就会知道 ping 基于 ICMP，处于网络层，而端口号是传输层的内容，在 ICMP 中根本没有端口号这个概念。</p>
+</blockquote>
+<br/>
+
+
+<h2><span id="traceroute">traceroute</span></h2>
+
+<p><code>traceroute</code> 同样也是基于 ICMP 协议实现的，</p>
+<h2><span id="tcpdump">tcpdump</span></h2>
+
+
+
+<h2><span id="Wireshark">Wireshark</span></h2>
+
+
+
+<h2><span id="nicstat">nicstat</span></h2>
+
+
+
+<h2><span id="DTrace">DTrace/perf</span></h2>
+
+
+
+<h2><span id="pathchar">pathchar</span></h2>
+
+
+
+<h2 id="容器使用"><a href="#容器使用" class="headerlink" title="容器使用"></a>容器使用</h2></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/05/28/NFVpractice/"><span class="level-item">[NFV] 虚拟网络</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><!--!--><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-10T03:07:42.000Z">2020-06-10</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/10/LinuxNetworkAnalyze/">LinuxNetworkAnalyze</a></p><p class="is-uppercase"></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-28T02:53:13.000Z">2020-05-28</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/28/NFVpractice/">[NFV] 虚拟网络</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-25T07:59:18.000Z">2020-05-25</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/25/NFV1LXD/">[NFV] LXD</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-17T08:48:36.000Z">2020-05-17</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/17/MicroservicesinGolangPart7/">Microservices in Golang - Part7</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a> / <a class="link-muted" href="/categories/Developments/Microservices/">Microservices</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-13T06:54:45.000Z">2020-05-13</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/13/MicroservicesinGolangPart6/">Microservices in Golang - Part6</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a> / <a class="link-muted" href="/categories/Developments/Microservices/">Microservices</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a><p class="size-small"><span>&copy; 2020 arithbar</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://fusidic.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
