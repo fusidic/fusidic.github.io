@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Linux性能调优 - Fusidic&#039;s blog</title><meta description="一直以来都比较希望掌握在复杂系统中定位和分析问题的能力，所以也是承接上一片网络分析的文章，这篇文章中主要想试着尝试对程序运行过程中的问题进行分析和定位。 关于这个领域也是第一次接触，质量有限，之后再做增补。"><meta property="og:type" content="blog"><meta property="og:title" content="Linux性能调优"><meta property="og:url" content="https://fusidic.github.io/"><meta property="og:site_name" content="Fusidic&#039;s blog"><meta property="og:description" content="一直以来都比较希望掌握在复杂系统中定位和分析问题的能力，所以也是承接上一片网络分析的文章，这篇文章中主要想试着尝试对程序运行过程中的问题进行分析和定位。 关于这个领域也是第一次接触，质量有限，之后再做增补。"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2020-06-12T09:07:50.000Z"><meta property="article:modified_time" content="2020-07-12T09:11:08.842Z"><meta property="article:author" content="arithbar"><meta property="article:tag" content="Linux"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://fusidic.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://fusidic.github.io/2020/06/12/LinuxPerformanceTool/"},"headline":"Fusidic's blog","image":["https://fusidic.github.io/img/og_image.png"],"datePublished":"2020-06-12T09:07:50.000Z","dateModified":"2020-07-12T09:11:08.842Z","author":{"@type":"Person","name":"arithbar"},"description":"一直以来都比较希望掌握在复杂系统中定位和分析问题的能力，所以也是承接上一片网络分析的文章，这篇文章中主要想试着尝试对程序运行过程中的问题进行分析和定位。 关于这个领域也是第一次接触，质量有限，之后再做增补。"}</script><link rel="canonical" href="https://fusidic.github.io/2020/06/12/LinuxPerformanceTool/"><link rel="icon" href="/img/favicon.jpg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/fusidic"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-06-12T09:07:50.000Z" title="2020-06-12T09:07:50.000Z">2020-06-12</time><span class="level-item"><a class="link-muted" href="/categories/Operations/">Operations</a></span><span class="level-item">22 分钟 读完 (大约 3285 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Linux性能调优</h1><div class="content"><p>一直以来都比较希望掌握在复杂系统中定位和分析问题的能力，所以也是承接上一片网络分析的文章，这篇文章中主要想试着尝试对程序运行过程中的问题进行分析和定位。</p>
+<p>关于这个领域也是第一次接触，质量有限，之后再做增补。</p>
+<a id="more"></a>
+
+<p>性能优化领域的大牛 Brendan Gregg 对性能优化有个非常好的总结，<a href="http://www.brendangregg.com/Perf/linux_perf_tools_full.png">这张图</a>里包括了系统结构中各个部分在调试检测(Observability)过程中需要用到的工具。在他的<a href="http://www.brendangregg.com/linuxperf.html">博客</a>中和这个 <a href="http://www.brendangregg.com/Slides/Velocity2015_LinuxPerfTools.pdf">slide</a> 中，更是提到了 Linux 系统中用于<strong>监测</strong>(Observability)、<strong>基准测试</strong>(Benchmarking)、<strong>调优</strong>(tuning)以及<strong>静态测试</strong>的工具。</p>
+<h2 id="Perf"><a href="#Perf" class="headerlink" title="Perf"></a>Perf</h2><p>Perf (Performance Event) 在 Brendan Gregg 的归纳图中，属于性能监测工具，通常用于对程序中函数调用进行分析，与 GDB 相比，perf 通过 tick 中断进行采样，但是并不会中断程序运行，。</p>
+<p>Perf 作为 Linux 系统内建的性能分析工具 (内核版本 2.6.31 以上)，以性能事件采样作为基础，可取样的事件非常多，包括分析 Hardware event，比如 cpu-cycles、instructions、cache-misses、branch-misses 等，同样的也可以分析一些 Software event，比如 page-faults、context-switches 等。</p>
+<p>perf 这种动态追踪工具，会给系统带来一定的性能损失。vmstat、pidstat 这些直接读取 proc 文件系统来获取指标的工具，则不会带来性能损失。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>两种方法：</p>
+<p>一、可以直接从内核源码中进行编译安装</p>
+<blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install libiberty-dev binutils-dev</span><br><span class="line">$ mkdir ~/install</span><br><span class="line">$ <span class="built_in">cd</span> ~/install</span><br><span class="line"><span class="comment"># 如果下述命令没有效果,</span></span><br><span class="line"><span class="comment"># 取消 /etc/apt/sources.list 中 deb-src 的注释 </span></span><br><span class="line"><span class="comment"># 或者直接从 packages.ubuntu.com 下载内核源码</span></span><br><span class="line">$ apt-get <span class="built_in">source</span> linux-tools-`uname -r`</span><br><span class="line">$ sudo apt-get build-dep linux-tools-`uname -r`</span><br><span class="line">$ <span class="built_in">cd</span> linux-`uname -r | sed <span class="string">'s/-.*//'</span>`/tools/perf</span><br><span class="line">$ make</span><br><span class="line"></span><br><span class="line"><span class="comment"># now you should see the new "perf" executable here</span></span><br><span class="line">$ ./perf</span><br></pre></td></tr></table></figure>
+
+<p>为了方便使用，可以将编译生成的 perf 执行文件加入到 <code>/usr/bin</code> 目录中，或者</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> PATH=~/install/linux-`uname -r | sed <span class="string">'s/-.*//'</span>`/tools/perf:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>二、包管理工具安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu</span></span><br><span class="line">$ sudo apt-get install linux-tools-common</span><br><span class="line"></span><br><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">$ sudo yum install perf</span><br></pre></td></tr></table></figure>
+
+<p>如果出现了一些警告，提示确实一些内核工具，只需按照提示安装即可，如果不放心的话可以用 <code>$uname -r</code> 确认版本号</p>
+<p>###常用</p>
+<p><strong>一种用法</strong>是 <code>perf top</code>  ，类似于 <code>top</code> ，能够实时显示占用 CPU 时钟最多的函数或者指令，因此可以用来查找热点函数，使用命令后可以看到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ perf top</span><br><span class="line">Samples: 8K of event <span class="string">'cycles:ppp'</span>, Event count (approx.): 5184211731</span><br><span class="line">Overhead  Shared Object                          Symbol</span><br><span class="line">   3.39%  perf                                   [.] __symbols__insert</span><br><span class="line">   2.60%  [kernel]                               [k] update_blocked_averages</span><br><span class="line">   2.14%  [kernel]                               [k] native_queued_spin_lock_slowpath</span><br><span class="line">   2.09%  perf                                   [.] rb_next</span><br><span class="line">   1.65%  perf                                   [.] d_print_comp_inner</span><br><span class="line">   1.53%  libj9gc29.so                           [.] MM_MarkingScheme::completeScan</span><br><span class="line">   1.21%  [kernel]                               [k] do_syscall_64</span><br><span class="line">   1.19%  prometheus                             [.] github.com/prometheus/prometheus/pkg/</span><br><span class="line">   1.11%  perf                                   [.] internal_cplus_demangle</span><br><span class="line">   1.06%  [kernel]                               [k] module_get_ka</span><br><span class="line">   ...</span><br></pre></td></tr></table></figure>
+
+<p>解释：</p>
+<p><code>Samples</code> 采样数，<code>event</code> 事件类型、<code>Event count</code> 事件总数；</p>
+<p><code>Overhead</code> ：性能事件在所有采样中的比例，用百分比表示，需要注意的是，如果采样数比较少，那下面的排序和百分比就没有什么实际参考价值；</p>
+<p><code>Shared</code> ：函数或指令所在的动态共享对象 (Dynamic Shared Object) ，如内核、进程名、动态链接库名、内核模块名等；</p>
+<p><code>Object</code> ：动态共享对象的类型，比如 <code>[.]</code> 表示拥护空间的可执行程序或动态链接库，<code>[k]</code> 表示内核空间；</p>
+<p><code>Symbol</code> ：符号名，也就是函数名。有时会看到十六进制的地址表示函数位置。</p>
+<p><strong>另一种比较常用到的是</strong> <code>perf record</code> ，虽然 <code>perf top</code> 可以实时的展示系统的性能信息，但并不能保存数据，因此就无法用于离线或者后续的分析。我们可以通过 <code>perf record</code> 保存数据，并用 <code>perf report</code> 展示数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ perf record</span><br><span class="line">^C</span><br><span class="line">[ perf record: Woken up 1 <span class="built_in">times</span> to write data ]</span><br><span class="line">[ perf record: Captured and wrote 1.269 MB perf.data (110 samples) ]</span><br><span class="line">$ perf report</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<h3 id="相关参数"><a href="#相关参数" class="headerlink" title="相关参数"></a>相关参数</h3><p>perf 命令参数很多，这里只列举其中的一部分，更多参见 <a href="https://perf.wiki.kernel.org/index.php/Tutorial#Events">https://perf.wiki.kernel.org/index.php/Tutorial#Events</a></p>
+<p><strong>Commands</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">perf</span><br><span class="line"></span><br><span class="line"> usage: perf [--version] [--<span class="built_in">help</span>] COMMAND [ARGS]</span><br><span class="line"></span><br><span class="line"> The most commonly used perf commands are:</span><br><span class="line">  annotate        Read perf.data (created by perf record) and display annotated code</span><br><span class="line">  archive         Create archive with object files with build-ids found <span class="keyword">in</span> perf.data file</span><br><span class="line">  bench           General framework <span class="keyword">for</span> benchmark suites</span><br><span class="line">  buildid-cache   Manage &lt;tt&gt;build-id&lt;/tt&gt; cache.</span><br><span class="line">  buildid-list    List the buildids <span class="keyword">in</span> a perf.data file</span><br><span class="line">  diff            Read two perf.data files and display the differential profile</span><br><span class="line">  inject          Filter to augment the events stream with additional information</span><br><span class="line">  kmem            Tool to trace/measure kernel memory(slab) properties</span><br><span class="line">  kvm             Tool to trace/measure kvm guest os</span><br><span class="line">  list            List all symbolic event types</span><br><span class="line">  lock            Analyze lock events</span><br><span class="line">  probe           Define new dynamic tracepoints</span><br><span class="line">  record          Run a <span class="built_in">command</span> and record its profile into perf.data</span><br><span class="line">  report          Read perf.data (created by perf record) and display the profile</span><br><span class="line">  <span class="built_in">sched</span>           Tool to trace/measure scheduler properties (latencies)</span><br><span class="line">  script          Read perf.data (created by perf record) and display trace output</span><br><span class="line">  <span class="built_in">stat</span>            Run a <span class="built_in">command</span> and gather performance counter statistics</span><br><span class="line">  <span class="built_in">test</span>            Runs sanity tests.</span><br><span class="line">  timechart       Tool to visualize total system behavior during a workload</span><br><span class="line">  top             System profiling tool.</span><br><span class="line"></span><br><span class="line"> See <span class="string">'perf help COMMAND'</span> <span class="keyword">for</span> more information on a specific <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+
+<p>每个指令后都可以加 <code>-h</code> 参数来查看具体的使用方法。</p>
+<br/>
+
+<h3 id="依赖问题"><a href="#依赖问题" class="headerlink" title="依赖问题"></a>依赖问题</h3><p>在使用 <code>perf</code> 进行程序分析的时候，有时我们会看到函数名为十六进制内存地址，行末警告依赖缺失的问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ perf top -g -p 26606</span><br><span class="line">Samples: 84  of event <span class="string">'cpu-clock:pppH'</span>, 4000 Hz, Event count (approx.): 9628712 lost: 0/0</span><br><span class="line">  Children      Self  Shared Object     Symbol</span><br><span class="line">+   18.37%     2.11%  [kernel]          [k] do_futex</span><br><span class="line">+   16.80%    16.80%  [kernel]          [k] _raw_spin_unlock_irqrestore</span><br><span class="line">+   12.63%     1.52%  [kernel]          [k] sys_futex</span><br><span class="line">+    7.39%     0.40%  [kernel]          [k] futex_wake</span><br><span class="line">+    7.19%     1.33%  [kernel]          [k] futex_wait</span><br><span class="line">+    6.91%     0.46%  [kernel]          [k] __schedule</span><br><span class="line">+    5.28%     5.28%  [kernel]          [k] finish_task_switch</span><br><span class="line">+    5.19%     0.00%  [unknown]         [.] 0x8d48ffffff4ce9ff</span><br><span class="line">+    5.19%     0.00%  [unknown]         [.] 0x0000000000ea5aa0</span><br><span class="line">+    5.19%     0.00%  frps              [.] 0x000000000044966a</span><br><span class="line">+    5.03%     5.03%  [kernel]          [k] __audit_syscall_exit</span><br><span class="line">+    4.67%     0.89%  [kernel]          [k] tcp_push</span><br><span class="line">+    4.18%     4.18%  frps              [.] 0x0000000000059a83</span><br><span class="line">+    4.04%     4.04%  [kernel]          [k] system_call_after_swapgs</span><br><span class="line">+    3.93%     3.93%  frps              [.] 0x0000000000034b00</span><br><span class="line">+    3.26%     1.52%  [kernel]          [k] sys_write</span><br><span class="line">+    2.60%     2.60%  frps              [.] 0x0000000000016d00</span><br><span class="line">+    2.60%     2.60%  frps              [.] 0x0000000000033cba</span><br><span class="line">+    2.60%     0.00%  [unknown]         [k] 0x484c75c08548008b</span><br><span class="line">+    2.60%     0.00%  [unknown]         [k] 0x0000000000ea1e10</span><br><span class="line">+    2.60%     0.00%  frps              [.] 0x000000000040a6c2</span><br><span class="line">+    2.60%     0.00%  frps              [.] 0x0000000000459a83</span><br><span class="line">+    2.60%     0.00%  [kernel]          [k] system_call_fastpath</span><br><span class="line">+    2.60%     0.00%  [kernel]          [k] futex_wait_queue_me</span><br><span class="line">+    2.60%     0.00%  [kernel]          [k] hrtimer_start_range_ns</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上述示例中，内核态的函数调用显示正常，而用户态的函数只能看到地址，这一般是由于 <code>perf</code> 找不到待分析进程依赖的库。</p>
+<p>同样的问题，在分析 Docker 应用时更为显著。由于 Docker 容器应用本身就是一个特殊的进程，通过 Linux Namespace 进行了隔离，所以从外部我们是无法获取到进程的依赖库的。</p>
+<p>那么如何解决这个问题呢？</p>
+<p>你可能很容易就会想到，在主机中把相同的依赖库加上，但是这不管从操作复杂度还是从主机安全的角度上考虑，都是不太可行的。</p>
+<p>另一个想法，在容器内部运行 perf，但需要注意的是，perf 的运行依赖于内核态，这要求容器处于特权模式下，然而一般情况下，出于安全考虑，我们会尽量避免构建特权容器(即容器进程拥有宿主机 root 的操作权限)。</p>
+<p>比较好的做法是<strong>指定符号路径为容器文件系统的路径</strong>，可以执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /tmp/foo</span><br><span class="line">$ PID=$(docker inspect --format &#123;&#123;.State.Pid&#125;&#125; phpfpm)</span><br><span class="line">$ bindfs /proc/<span class="variable">$PID</span>/root /tmp/foo</span><br><span class="line">$ perf report --symfs /tmp/foo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用完成后不要忘记解除绑定</span></span><br><span class="line">$ umount /tmp/foo/</span><br></pre></td></tr></table></figure>
+
+<p><code>bindfs</code> 工具需要额外安装，这里它的作用是将容器的文件系统挂载到 <code>/tmp/foo</code> 路径下 (类似 mount –bind) 的功能，可以在 <a href="https://github.com/mpartel/bindfs">GitHub</a> 下载源码进行安装。</p>
+<p>更简单的方法是，*<em>在容器内部 <code>report</code> *</em>。可以利用 <code>record</code> 指令记录分析结果，并将其传到容器中，再使用 <code>report</code> 进行显示并分析。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将获取的文件复制到容器中</span></span><br><span class="line">$ docker cp perf.data CONTAINER:/tmp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器 bash</span></span><br><span class="line">$ docker <span class="built_in">exec</span> -i -t CONTAINER bash</span><br><span class="line">$ <span class="built_in">cd</span> /tmp</span><br><span class="line">$ apt-get update &amp;&amp; apt-get install -y linux-tools linux-perf procps</span><br><span class="line">$ perf_4.9 report</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里两点需要注意。</p>
+<ol>
+<li>perf 工具的版本问题。在最后一步中，我们运行的工具是容器内部安装的版本 perf_4.9，而不是普通的 perf 命令。这是因为， perf 命令实际上是一个软连接，会跟内核的版本进行匹配，但镜像里安装的 perf 版本跟虚拟机的内核版本有可能并不一致。</li>
+<li>注意镜像是基于什么系统的，对于不同的发行版安装 perf 的方式不同。</li>
+</ol>
+</blockquote>
+<br/>
+
+<h2 id="Strace"><a href="#Strace" class="headerlink" title="Strace"></a>Strace</h2><p>前面已经提到了，进程在调用内核态的能力 (如访问硬件设备) 的时候必须要要间接通过系统调用完成，strace 工具就可以用来跟踪进程执行时的系统调用和所接收的信号。</p>
+<h3 id="常用"><a href="#常用" class="headerlink" title="常用"></a>常用</h3><p>跟踪可执行程序及其所有子进程:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -f -F 启用跟踪 fork 和 vfork 的子进程</span></span><br><span class="line">$ strace -f -F -o ~/straceout.txt testserver</span><br></pre></td></tr></table></figure>
+
+<p>跟踪服务程序:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ strace -o output.txt -T -tt -e trace=all -p 28989</span><br></pre></td></tr></table></figure>
+
+<p>跟踪 PID 为 28989 的进程所有的系统调用 (<code>-e trace=all</code>) ，并统计系统调用花费的时间 (<code>-T</code>) ，以及开始的时间，以可视化的时分秒格式显示 (<code>-tt</code>)，并记录在 output.txt 文件中。</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><table>
+<thead>
+<tr>
+<th>Args</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>统计每一系统调用的所执行的时间,次数和出错的次数等.</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>输出 strace 关于标准错误的调试信息.</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>跟踪由 fork 调用所产生的子进程.</td>
+</tr>
+<tr>
+<td>-ff</td>
+<td>如果提供 <code>-o filename</code> ,则所有进程的跟踪结果输出到相应的 filename . pid 中, pid 是各进程的进程号.</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>尝试跟踪 vfork 调用.在 <code>-f</code> 时, vfork 不被跟踪.</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>输出简要的帮助信息.</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>输出系统调用的入口指针.</td>
+</tr>
+<tr>
+<td>-q</td>
+<td>禁止输出关于脱离的消息.</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>打印出相对时间关于,,每一个系统调用.</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>在输出中的每一行前加上时间信息.</td>
+</tr>
+<tr>
+<td>-tt</td>
+<td>在输出中的每一行前加上时间信息,微秒级.</td>
+</tr>
+<tr>
+<td>-ttt</td>
+<td>微秒级输出,以秒了表示时间.</td>
+</tr>
+<tr>
+<td>-T</td>
+<td>显示每一调用所耗的时间.</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>输出所有的系统调用.一些调用关于环境变量,状态,输入输出等调用由于使用频繁,默认不输出.</td>
+</tr>
+<tr>
+<td>-V</td>
+<td>输出 strace 的版本信息.</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>以十六进制形式输出非标准字符串</td>
+</tr>
+<tr>
+<td>-xx</td>
+<td>所有字符串以十六进制形式输出.</td>
+</tr>
+<tr>
+<td>-a column</td>
+<td>设置返回值的输出位置.默认为40.</td>
+</tr>
+<tr>
+<td>-e trace=set</td>
+<td>只跟踪指定的系统 调用.例如: <code>-e trace=open</code>, <code>close</code> , <code>rean</code>, <code>write</code> 表示只跟踪这四个系统调用.默认的为 <code>set=all</code>.</td>
+</tr>
+<tr>
+<td>-e trace=file</td>
+<td>只跟踪有关文件操作的系统调用.</td>
+</tr>
+<tr>
+<td>-e trace=process</td>
+<td>只跟踪有关进程控制的系统调用.</td>
+</tr>
+<tr>
+<td>-e trace=network</td>
+<td>跟踪与网络有关的所有系统调用.</td>
+</tr>
+<tr>
+<td>-e strace=signal</td>
+<td>跟踪所有与系统信号有关的 系统调用</td>
+</tr>
+<tr>
+<td>-e trace=ipc</td>
+<td>跟踪所有与进程通讯有关的系统调用</td>
+</tr>
+<tr>
+<td>-e abbrev=set</td>
+<td>设定 strace输出的系统调用的结果集. <code>-v</code> 等与 <code>abbrev=none</code>.默认为 <code>abbrev=all</code>.</td>
+</tr>
+<tr>
+<td>-e raw=set</td>
+<td>将指 定的系统调用的参数以十六进制显示.</td>
+</tr>
+<tr>
+<td>-e signal=set</td>
+<td>指定跟踪的系统信号.默认为all.如 signal=!SIGIO (或者 signal=!io ),表示不跟踪 SIGIO 信号.</td>
+</tr>
+<tr>
+<td>-e read=set</td>
+<td>输出从指定文件中读出 的数据.例如: <code>-e read=3,5</code> <code>-e write=set</code>输出写入到指定文件中的数据.</td>
+</tr>
+<tr>
+<td>-o filename</td>
+<td>将 strace 的输出写入文件 filename</td>
+</tr>
+<tr>
+<td>-p pid</td>
+<td>跟踪指定的进程 pid.</td>
+</tr>
+<tr>
+<td>-s strsize</td>
+<td>指定输出的字符串的最大长度.默认为 32.文件名一直全部输出.</td>
+</tr>
+<tr>
+<td>-u username</td>
+<td>以 username 的 UID 和 GID 执行被跟踪的命令</td>
+</tr>
+</tbody></table>
+<br/>
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>当然了，性能调优是一个很大的命题，性能问题的症结可能出现在任何一个地方，如 CPU 中频繁的上下文切换造成的大量开销、调度失败重试造成的系统负担、大量网络包引发频繁的数据接收引起的软中断等。</p>
+<p>面对这些问题，一个是靠对底层系统的全面理解，另一个是依靠对各种工具的灵活使用，才能形成一套完整且有效的方法论，快速定位问题，完成性能优化。</p>
+<p>我更愿意称这项能力为一种“内功”，大部分时候，我们会更注重对“招式”的学习，而到了“招式”本身已经无法解决问题的时候，内功就显得尤为重要了。</p>
+<br/>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>Linux 性能优化实战, 倪朋飞, geekban.org</li>
+<li>Linux kernel profilling with perf, <a href="https://perf.wiki.kernel.org/index.php/Tutorial#Events">https://perf.wiki.kernel.org/index.php/Tutorial#Events</a></li>
+<li>Linux 效能分析工具: Perf, <a href="http://wiki.csie.ncku.edu.tw/embedded/perf-tutorial">http://wiki.csie.ncku.edu.tw/embedded/perf-tutorial</a></li>
+<li>Linux Tools Quick Tutorial, <a href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/strace.html">https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/strace.html</a></li>
+</ul>
+</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Linux/">Linux</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/06/03/LinuxNetworkAnalyze/"><span class="level-item">Linux 网络分析</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#Perf"><span class="mr-2">1</span><span>Perf</span></a><ul class="menu-list"><li><a class="is-flex" href="#安装"><span class="mr-2">1.1</span><span>安装</span></a></li><li><a class="is-flex" href="#相关参数"><span class="mr-2">1.2</span><span>相关参数</span></a></li><li><a class="is-flex" href="#依赖问题"><span class="mr-2">1.3</span><span>依赖问题</span></a></li></ul></li><li><a class="is-flex" href="#Strace"><span class="mr-2">2</span><span>Strace</span></a><ul class="menu-list"><li><a class="is-flex" href="#常用"><span class="mr-2">2.1</span><span>常用</span></a></li><li><a class="is-flex" href="#参数"><span class="mr-2">2.2</span><span>参数</span></a></li></ul></li><li><a class="is-flex" href="#总结"><span class="mr-2">3</span><span>总结</span></a></li><li><a class="is-flex" href="#参考"><span class="mr-2">4</span><span>参考</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-12T09:07:50.000Z">2020-06-12</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/12/LinuxPerformanceTool/">Linux性能调优</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-06-03T13:44:16.000Z">2020-06-03</time></p><p class="title is-6"><a class="link-muted" href="/2020/06/03/LinuxNetworkAnalyze/">Linux 网络分析</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-28T02:53:13.000Z">2020-05-28</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/28/NFVpractice/">[NFV] 虚拟网络</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-25T07:59:18.000Z">2020-05-25</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/25/NFV1LXD/">[NFV] LXD</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Operations/">Operations</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2020-05-17T08:48:36.000Z">2020-05-17</time></p><p class="title is-6"><a class="link-muted" href="/2020/05/17/MicroservicesinGolangPart7/">Microservices in Golang - Part7</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Developments/">Developments</a> / <a class="link-muted" href="/categories/Developments/Microservices/">Microservices</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Fusidic&#039;s blog" height="28"></a><p class="size-small"><span>&copy; 2020 arithbar</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://fusidic.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
